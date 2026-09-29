@@ -1,0 +1,19 @@
+# 依赖（npm install 重建）
+node_modules/
+
+# 构建产物（electron-vite build 重建）
+out/
+dist-mcp/
+dist-runner/
+
+# 本机环境与日志
+.env
+.env.*
+*.log
+npm-debug.log*
+
+# 编辑器/系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

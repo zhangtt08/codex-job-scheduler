@@ -1,0 +1,40 @@
+{
+  "name": "codex-job-scheduler",
+  "version": "0.2.0",
+  "description": "Multi-agent unattended job scheduler for Windows (MCP-enabled)",
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "build:runner": "esbuild src/runner/cli.ts --bundle --platform=node --format=cjs --outfile=dist-runner/codex-runner.cjs --external:electron",
+    "build:mcp": "esbuild src/mcp/server.ts --bundle --platform=node --format=cjs --outfile=dist-mcp/mcp-server.cjs --external:electron",
+    "build:all": "npm run build && npm run build:runner && npm run build:mcp",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "productName": "Agent Job Scheduler",
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^5.2.0",
+    "electron": "^44.0.0",
+    "electron-vite": "^5.0.0",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vite": "^7.3.6"
+  },
+  "allowScripts": {
+    "electron@44.0.0": true,
+    "esbuild@0.25.12": true,
+    "esbuild@0.28.2": true
+  }
+}
