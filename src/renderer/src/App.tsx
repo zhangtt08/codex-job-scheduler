@@ -4,7 +4,7 @@ import ProjectsPage from './pages/Projects'
 import TasksPage from './pages/Tasks'
 import LogsPage from './pages/Logs'
 import AgentsPage from './pages/Agents'
-import TitleBar from './TitleBar'
+import TitleBar, { WindowControls } from './TitleBar'
 import { api } from './api'
 import type { AgentStatus } from '../../shared/types'
 
@@ -37,15 +37,15 @@ export default function App() {
 
   return (
     <div className="shell">
-      <TitleBar />
-      <div className="shell-body">
+      <div className="shell-body shell-body-top">
         <aside className="sidebar">
-          <div className="brand">
+          <div className="brand drag-region">
             <span className="brand-mark">◆</span>
             <div>
               <div className="brand-name">Agent 任务调度</div>
               <div className="brand-sub">无人值守执行器</div>
             </div>
+            <WindowControls />
           </div>
           <nav>
             {NAV.map((item) => (

@@ -79,3 +79,69 @@ export default function TitleBar() {
     </div>
   )
 }
+
+function Buttons() {
+  return (
+    <>
+      <button
+        type="button"
+        className="win-btn"
+        title="最小化"
+        onClick={() => void api.windowControls.minimize().catch(() => {})}
+      >
+        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+          <path d="M0 5h10" stroke="currentColor" strokeWidth="1" />
+        </svg>
+      </button>
+      <MaxButton />
+      <button
+        type="button"
+        className="win-btn close"
+        title="关闭"
+        onClick={() => void api.windowControls.close().catch(() => {})}
+      >
+        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+          <path d="M0 0l10 10M10 0L0 10" stroke="currentColor" strokeWidth="1" />
+        </svg>
+      </button>
+    </>
+  )
+}
+
+function MaxButton() {
+  const [maximized, setMaximized] = useState(false)
+  useEffect(() => {
+    const controls = api.windowControls
+    if (!controls) return
+    let alive = true
+    controls.isMaximized().then((v) => { if (alive) setMaximized(v) }).catch(() => {})
+    const unsubscribe = controls.onMaximizedChange(setMaximized)
+    return () => { alive = false; unsubscribe() }
+  }, [])
+  return (
+    <button
+      type="button"
+      className="win-btn"
+      title={maximized ? '向下还原' : '最大化'}
+      onClick={() => void api.windowControls.toggleMaximize().catch(() => {})}
+    >
+      {maximized ? (
+        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+          <rect x="0.5" y="2.5" width="7" height="7" fill="none" stroke="currentColor" strokeWidth="1" />
+          <path d="M2.5 2.5v-2h7v7h-2" fill="none" stroke="currentColor" strokeWidth="1" />
+        </svg>
+      ) : (
+        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+          <rect x="0.5" y="0.5" width="9" height="9" fill="none" stroke="currentColor" strokeWidth="1" />
+        </svg>
+      )}
+    </button>
+  )
+}
+
+/** 窗口三键簇：嵌入应用自己的头部行（侧栏品牌行 / topbar 右端）。 */
+export function WindowControls() {
+  const isMac = navigator.userAgent.includes('Macintosh')
+  if (isMac) return null
+  return <div className="win-controls"><Buttons /></div>
+}
