@@ -139,4 +139,24 @@ export function registerIpc(getWindow: GetWindow): void {
     })
     return result.canceled ? null : result.filePaths[0]
   })
+
+  // --- Window controls（frameless 自绘标题栏的三键） ---
+  // close 走 window 的 'close' 事件 → 既有逻辑会收进托盘而不是退出，行为不变。
+  ipcMain.handle('window:minimize', () => {
+    getWindow()?.minimize()
+  })
+  ipcMain.handle('window:toggle-maximize', () => {
+    const win = getWindow()
+    if (!win) return false
+    if (win.isMaximized()) {
+      win.unmaximize()
+      return false
+    }
+    win.maximize()
+    return true
+  })
+  ipcMain.handle('window:close', () => {
+    getWindow()?.close()
+  })
+  ipcMain.handle('window:is-maximized', () => !!getWindow()?.isMaximized())
 }

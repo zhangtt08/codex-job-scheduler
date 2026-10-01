@@ -53,6 +53,19 @@ const api = {
     const handler = (_e: unknown, payload: unknown) => cb(payload)
     ipcRenderer.on('run:finished', handler)
     return () => ipcRenderer.removeListener('run:finished', handler)
+  },
+
+  // Window controls（frameless 自绘标题栏）
+  windowControls: {
+    minimize: () => ipcRenderer.invoke('window:minimize'),
+    toggleMaximize: (): Promise<boolean> => ipcRenderer.invoke('window:toggle-maximize'),
+    close: () => ipcRenderer.invoke('window:close'),
+    isMaximized: (): Promise<boolean> => ipcRenderer.invoke('window:is-maximized'),
+    onMaximizedChange: (cb: (maximized: boolean) => void) => {
+      const handler = (_e: unknown, maximized: boolean) => cb(maximized)
+      ipcRenderer.on('window:maximized', handler)
+      return () => ipcRenderer.removeListener('window:maximized', handler)
+    }
   }
 }
 

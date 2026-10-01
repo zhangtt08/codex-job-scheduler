@@ -83,7 +83,9 @@ function createWindow(): void {
     title: 'Agent 任务调度器',
     backgroundColor: '#f3f4f6',
     // hiddenInset 只在 macOS 生效；Windows 上写它会落到无边框样式，
-    // 结果窗口拖不动、也没有系统按钮。按平台区分。
+    // 结果窗口拖不动、也没有系统按钮。按平台区分：
+    // macOS 保留系统红绿灯（hiddenInset），Windows 用 frame:false 自绘标题栏。
+    frame: process.platform === 'darwin',
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     autoHideMenuBar: true,
     icon: path.join(__dirname, '../../assets/icon.png'),
@@ -101,6 +103,10 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
   }
+
+  // 最大化状态变化推给渲染层，驱动自绘标题栏的最大化/还原图标切换。
+  mainWindow.on('maximize', () => mainWindow?.webContents.send('window:maximized', true))
+  mainWindow.on('unmaximize', () => mainWindow?.webContents.send('window:maximized', false))
 
   // 关窗口 = 收进托盘，不退出。调度器必须保持在线，否则"关掉窗口就不跑了"。
   mainWindow.on('close', (e) => {

@@ -20,6 +20,15 @@ export interface TaskSaveResult {
   schedule: ScheduleResult | null
 }
 
+/** frameless 自绘标题栏的窗口三键（preload 注入） */
+export interface WindowControls {
+  minimize(): Promise<void>
+  toggleMaximize(): Promise<boolean>
+  close(): Promise<void>
+  isMaximized(): Promise<boolean>
+  onMaximizedChange(cb: (maximized: boolean) => void): () => void
+}
+
 export interface Api {
   listProjects(): Promise<Project[]>
   getProject(id: number): Promise<Project | null>
@@ -55,6 +64,8 @@ export interface Api {
   onRunEvent(cb: (payload: { logId: number; stream: 'stdout' | 'stderr'; line: string }) => void): () => void
   onRunUpdated(cb: (payload: { logId: number }) => void): () => void
   onRunFinished(cb: (payload: { logId: number; result: string; exitCode: number | null }) => void): () => void
+
+  windowControls: WindowControls
 }
 
 export const api: Api = (window as unknown as { api: Api }).api
